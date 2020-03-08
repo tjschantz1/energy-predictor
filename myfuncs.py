@@ -27,7 +27,8 @@ def get_path(subdir=None):
             subdir = '\\'+subdir+'\\'
         elif os.name == 'posix': #MacBook Pro
             subdir = '/'+subdir+'/'
-    path = curdir+subdir
+        path = curdir+subdir
+    path = curdir+'/'
     return path
 
 #%% Run-Time Timer
@@ -42,7 +43,7 @@ def dt_convert(df, colList): # should convert any string input for datetime
         df[c] = pd.to_datetime(df[c], errors='coerce') 
         
 #%% csv to DataFrame Importer
-def import_data(path, file_name, datetimeCol=None, rand_samp=0):
+def import_data(path, file_name, datetime_col=None, rand_samp=0):
     print('\n   Importing {}...'.format(file_name))
     if rand_samp>0: # import a seeded random sample % of the data length
         random.seed(3)
@@ -95,6 +96,20 @@ def tbl_missing(df):
     missing_tbl.volume = ['{:,}'.format(x) for x in missing_tbl.volume]
     missing_tbl.percent = ['{:.1%}'.format(x) for x in missing_tbl.percent]
     return missing_tbl
+
+def describe_shape_missing(dfs):
+    print('\n---Data Shape Analysis---\n')
+    for df in dfs:
+        print('Size of {} data: {}'.\
+              format([x for x in globals() if globals()[x] is df][0],
+                     df.shape))
+    print('\n---Missing Data Analysis---\n')
+    for df in dfs:
+        print('Missing {} data:\n{}\n'.\
+              format([x for x in globals() if globals()[x] is df][0],
+                     tbl_missing(df)))
+def test():
+    return 'success'
 
 #%% Create aggregate count & percentage table by value in df col
 def tbl_vol_perc(df, col):
